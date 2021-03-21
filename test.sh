@@ -1,38 +1,46 @@
 #!/bin/bash
+GA="GA"
+LIN="Linear"
+EN="Entropy"
+MM="MaxMin"
 
 # remove existing log files
 rm -f GAresults.log
 rm -f LinearMM.log
 rm -f LinearEN.log
+rm -f results.txt
 
 
 # for each simulation duration
 for x in {1..100}; do
-    for type in 'GA' 'Linear MaxMin' 'Linear Entropy'; do
-    # output the current simulation
-        echo "[Testing " $type "for " $x " times ]"
+    for type in $LIN $GA; do
+        if [ $type == $LIN ]; then
 
-        # run the simulation
-        gnome-terminal -- mastermindbisTest.py $type
-                
-        sleep 7
-
-        #Get the results 
-        while read line  
-        do   
-            if $type == 'GA'
-            then
+            for atype in $EN $MM; do
+                while IFS= read -r line
+                do
+                     echo "[Testing " $type $atype "for " $x " times ]"
+                    # take action on $line #
+                    echo "line : $line"
+                    if [ $atype == $MM ]; then
+                            echo "$line">> LinearMM.log
+                    elif [ $atype == $EN ]; then
+                            echo "$line">> LinearEN.log
+                    fi
+                done <<< $(python3 ./mastermindbisTest.py $type $atype)
+            done
+        else :
+            while IFS= read -r line
+            do
+                echo "[Testing " $type "for " $x " times ]"
+                # take action on $line #
                 echo "$line">> GAresults.log
-            fi
-            if $type == 'Linear MaxMin'
-            then
-                echo "$line">> LinearMM.log
-            fi
-            if $type == 'Linear Entropy'
-            then
-                echo "$line">> LinearEN.log
-            fi
-        done
+            done <<< $(python3 ./mastermindbisTest.py $type)
+        fi
+        
+
+       
+
     done
 done
 
