@@ -1,24 +1,17 @@
 import math
 import random 
 import statistics
+import itertools
 
 def genPoss (couleur, positions) :
-    all =[]
-    code = []
-    for i in range (positions) :
-        code.append('')
-    for i in range (len(couleur)) :
-        code[0] = couleur[i]
-        for j in range(len(couleur)) :
-            code[1] = couleur[j]
-            for t in range(len(couleur)) :
-                code[2] = couleur[t]
-                for x in range(len(couleur)) :
-                    code[3] = couleur[x]
-                    all.append(code.copy())
+    all = list(itertools.product(couleur, repeat = positions))
+    for i in range(len(all)) :
+        t = list(all[i]).copy()
+        all[i] = t
     return all
+
 def jeu(essai, code) :
-    #code = self.previousGess(Nmbtest-1)
+    #code = self.previousGess(Nmbtest-1)s
     Vessai = essai.copy()
     Vcode = code.copy()
     BPlist = []
@@ -52,7 +45,8 @@ def PremiereProposition (couleur, positions) :
 def reduce (code, ensemble, BP, MP) :
     newensemble = []
     for elements in ensemble :
-        BPT,MPT = jeu(code, elements)
+        elements = list(elements)
+        BPT,MPT = jeu(list(code), elements)
         #print("code de base : " + str(code) + " code test : " + str(elements) + "\n Resultats :" + str(BP) + " contre " + str(BPT) + " et " +str(MP) + " contre " + str(MPT))
         if BPT == BP and MPT == MP :
             newensemble.append(elements)
@@ -100,6 +94,7 @@ def Entropy(ensemble) :
     listinfo =[]
     for element in ensemble :
         info = multipleInfo(element, ensemble, 6)
+        #print(statistics.mean(info))
         listinfo.append(statistics.mean(info))
     IndexBC = listinfo.index(max(listinfo))
     bestchoice = ensemble[IndexBC]
@@ -122,4 +117,3 @@ Max Entropy Strategy :
 2- Calculer la moyenne de chacun
 3- Prendre celui avec la moyenne la plus haute
 """
-

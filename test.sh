@@ -37,12 +37,5 @@ for x in {1..100}; do
                 echo "$line">> GAresults.log
             done <<< $(python3 ./mastermindbisTest.py $type)
         fi
-        
-
-       
-
     done
 done
-
-# remove temporary trace and log file
-#rm -f tracefile.lo
