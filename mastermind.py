@@ -9,10 +9,9 @@ essai =""
 
 
 
-
 def gen() :
     code =[]
-    for i in range(4) : 
+    for i in range(positions) : 
         code.append(random.choice(Couleur))
     return code
 
