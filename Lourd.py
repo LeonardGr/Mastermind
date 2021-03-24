@@ -56,7 +56,7 @@ def information(ensemble, code, BP, MP) :
     newensemble = reduce(code, ensemble, BP, MP)
     info = len(newensemble)/len(ensemble)
     if info != 0 :
-        info = math.log2(info)
+        info = - math.log2(info)
     return info
 
 def multipleInfo(code, ensemble, nbrPositions) :
@@ -85,9 +85,24 @@ def MaxMin(ensemble) :
     for element in ensemble :
         info = multipleInfo(element, ensemble, 6)
         listinfo.append(min(info))
-    IndexBC = listinfo.index(max(listinfo))
-    bestchoice = ensemble[IndexBC]
+    IndexBC = maximum(listinfo)
+    if len(IndexBC) > 1 :
+        #print("Entropy failed " + str(len(IndexBC)) + " with same entropy")
+        choices = [ ensemble[i] for i in IndexBC]
+        bestchoice = (choices)
+    else :
+        bestchoice = ensemble[IndexBC[0]]
     return bestchoice
+
+def maximum(list) :
+    maxval = None
+    for index, val in enumerate(list):
+        if maxval is None or val > maxval:
+            indices = [index]
+            maxval = val
+        elif val == maxval:
+            indices.append(index)
+    return indices
 
 def Entropy(ensemble) : 
     info = []
@@ -96,8 +111,13 @@ def Entropy(ensemble) :
         info = multipleInfo(element, ensemble, 6)
         #print(statistics.mean(info))
         listinfo.append(statistics.mean(info))
-    IndexBC = listinfo.index(max(listinfo))
-    bestchoice = ensemble[IndexBC]
+    IndexBC = maximum(listinfo)
+    if len(IndexBC) > 1 :
+        #print("Entropy failed " + str(len(IndexBC)) + " with same entropy")
+        choices = [ ensemble[i] for i in IndexBC]
+        bestchoice = random.choice(choices)
+    else :
+        bestchoice = ensemble[IndexBC[0]]
     return bestchoice
 """
 TO DO :

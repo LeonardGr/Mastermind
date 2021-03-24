@@ -67,11 +67,11 @@ while 1==1 :
         else : 
             print("mauvaise entrée ! ")
     if jeu1  == '1' :
-        gameBreaker = CodeBreaker.MMCodebreaker(Couleur, positions)
+        GA = CodeBreaker.UseGA(Couleur, positions)
         while BP != positions :
-            print ("Proposition n° : "+ str(gameBreaker.compte) + " -> " + str(gameBreaker.nextMove()))
-            BP,MP = jeu(gameBreaker.nextMove(), code)
-            gameBreaker.reponse(MP,BP)
+            print ("Proposition n° : "+ str(len(GA.propositions)) + " -> " + str(GA.actual_prop))
+            BP,MP = jeu(GA.actual_prop, code)
+            GA.reponse(MP,BP)
             i += 1
     if jeu1 == '2' :
         good = False
