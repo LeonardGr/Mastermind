@@ -51,7 +51,7 @@ def jeu(essai, code) :
     print(str(BP) + " bien placé\n" + str(MP) + " mal placé\n")
     return(BP,MP)
 
-
+#Un code est généré, et l'on utilise après le GA ou le linéaire MM ou EN
 while 1==1 :
     code = gen()
     print ("\nCode à trouver : " + str(code) + "\n")

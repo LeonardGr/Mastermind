@@ -3,13 +3,14 @@ import random
 import statistics
 import itertools
 
+# Génération de tous les codes possibles pour un nombre de couleurs et de positions donnés
 def genPoss (couleur, positions) :
     all = list(itertools.product(couleur, repeat = positions))
     for i in range(len(all)) :
         t = list(all[i]).copy()
         all[i] = t
     return all
-
+#Calcul BP et MP
 def jeu(essai, code) :
     #code = self.previousGess(Nmbtest-1)s
     Vessai = essai.copy()
@@ -34,14 +35,15 @@ def jeu(essai, code) :
             MP +=1
             Vcode.remove(Vessai[i])
     return(BP,MP)
-
+# Calcul code aléatoire
 def PremiereProposition (couleur, positions) :
         code =[] 
         for i in range (positions) :
             code.append(random.choice(couleur))
         #print(code)
         return code
-
+#Permet de réduire l'ensemble de réponse possible en fonction des BP et MP retournés
+#On supprime tous les codes qui ne donne pas la même réponse lorsqu'on les confronte avec la réponse précédente
 def reduce (code, ensemble, BP, MP) :
     newensemble = []
     for elements in ensemble :
@@ -52,6 +54,7 @@ def reduce (code, ensemble, BP, MP) :
             newensemble.append(elements)
     return newensemble
 
+#Calcul de la quantité d'information donnée par un code et un combo MP/BP. C'est à dire si on propose ce code et que la réponse est ce combo de BP/MP, quel sera la taille de l'ensemble par la suite
 def information(ensemble, code, BP, MP) :
     newensemble = reduce(code, ensemble, BP, MP)
     info = len(newensemble)/len(ensemble)
@@ -59,6 +62,7 @@ def information(ensemble, code, BP, MP) :
         info = - math.log2(info)
     return info
 
+# retourne l'ensemble des informations possible pour un code (en testant donc tous les combos BP/MP)
 def multipleInfo(code, ensemble, nbrPositions) :
     """
         To do : Pour un code, calculer pour chaque combo de MP/BP, les infos
@@ -79,6 +83,7 @@ def multipleInfo(code, ensemble, nbrPositions) :
                     #print("Bien placé : " + str(BP) + " \nMal placé : " + str(MP)+ "\n")
     return info
 
+#Pour tout un ensemble on calcul l'information de chaque code et on choisit celui qui a le maximum d'information au minimum(voir ci dessous pour plus de détail)
 def MaxMin(ensemble) :
     info = []
     listinfo =[]
@@ -94,6 +99,7 @@ def MaxMin(ensemble) :
         bestchoice = ensemble[IndexBC[0]]
     return bestchoice
 
+# Retourne les indices des maximums d'une liste(si plusieurs max)
 def maximum(list) :
     maxval = None
     for index, val in enumerate(list):
@@ -103,7 +109,7 @@ def maximum(list) :
         elif val == maxval:
             indices.append(index)
     return indices
-
+# Retourne le code dans un ensemble qui a en moyenne l'information la plus haute
 def Entropy(ensemble) : 
     info = []
     listinfo =[]
