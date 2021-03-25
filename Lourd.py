@@ -99,6 +99,22 @@ def MaxMin(ensemble) :
         bestchoice = ensemble[IndexBC[0]]
     return bestchoice
 
+def MinMax(ensemble) :
+    info = []
+    listinfo =[]
+    for element in ensemble :
+        info = multipleInfo(element, ensemble, 6)
+        listinfo.append(max(info))
+    IndexBC = minimum(listinfo)
+    if len(IndexBC) > 1 :
+        #print("Entropy failed " + str(len(IndexBC)) + " with same entropy")
+        choices = [ ensemble[i] for i in IndexBC]
+        bestchoice = random.choice(choices)
+    else :
+        bestchoice = ensemble[IndexBC[0]]
+    return bestchoice
+
+
 # Retourne les indices des maximums d'une liste(si plusieurs max)
 def maximum(list) :
     maxval = None
@@ -122,6 +138,26 @@ def Entropy(ensemble) :
         #print("Entropy failed " + str(len(IndexBC)) + " with same entropy")
         choices = [ ensemble[i] for i in IndexBC]
         bestchoice = MaxMin(choices)
+    else :
+        bestchoice = ensemble[IndexBC[0]]
+    return bestchoice
+
+def minimum(ensemble) :
+    min_value = min(ensemble)
+    return [i for i, x in enumerate(ensemble) if x == min_value]
+
+def Entropybis(ensemble) : 
+    info = []
+    listinfo =[]
+    for element in ensemble :
+        info = multipleInfo(element, ensemble, 6)
+        #print(statistics.mean(info))
+        listinfo.append(statistics.mean(info))
+    IndexBC = minimum(listinfo)
+    if len(IndexBC) > 1 :
+        #print("Entropy failed " + str(len(IndexBC)) + " with same entropy")
+        choices = [ ensemble[i] for i in IndexBC]
+        bestchoice = MinMax(choices)
     else :
         bestchoice = ensemble[IndexBC[0]]
     return bestchoice
