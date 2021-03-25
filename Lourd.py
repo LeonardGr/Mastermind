@@ -89,7 +89,7 @@ def MaxMin(ensemble) :
     if len(IndexBC) > 1 :
         #print("Entropy failed " + str(len(IndexBC)) + " with same entropy")
         choices = [ ensemble[i] for i in IndexBC]
-        bestchoice = (choices)
+        bestchoice = random.choice(choices)
     else :
         bestchoice = ensemble[IndexBC[0]]
     return bestchoice
@@ -115,7 +115,7 @@ def Entropy(ensemble) :
     if len(IndexBC) > 1 :
         #print("Entropy failed " + str(len(IndexBC)) + " with same entropy")
         choices = [ ensemble[i] for i in IndexBC]
-        bestchoice = random.choice(choices)
+        bestchoice = MaxMin(choices)
     else :
         bestchoice = ensemble[IndexBC[0]]
     return bestchoice
