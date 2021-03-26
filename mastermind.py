@@ -76,9 +76,9 @@ while 1==1 :
     if jeu1 == '2' :
         good = False
         while good == False :
-            print ("Jouer avec Max/min (1) ou avec Entropy(2) ? ")
+            print ("Jouer avec Max/min (1) ou avec Entropy(2) ou avec MinMax(3) ou avec EntropyBis(4)? ")
             jeu2 = input()
-            if jeu2 == '1' or jeu2 == '2' : 
+            if jeu2 == '1' or jeu2 == '2' or jeu2 == '3' or jeu2 == '4': 
                 good = True
             else : 
                 print("mauvaise entrée ! ")
@@ -95,6 +95,10 @@ while 1==1 :
                 proposition = Lourd.MaxMin(possibilites)
             elif jeu2 == '2' :
                 proposition = Lourd.Entropy(possibilites)
+            if jeu2 == '3' :
+                proposition = Lourd.MinMax(possibilites)
+            elif jeu2 == '4' :
+                proposition = Lourd.Entropybis(possibilites)
             i +=1
 
     ("Partie finie en " + str(i-1) + " essai(s) ! ")
