@@ -1,4 +1,5 @@
 import random
+import UsePSO
 import UseGA
 import Lourd
 Couleur =  (('J','B','R','V','L','N'))
@@ -83,12 +84,19 @@ while 1==1 :
     i = 1
     good = False
     while good == False :
-        print ("Jouer avec GA(1) ou avec linear(2) ? ")
+        print ("Jouer avec GA(1) ou avec linear(2) ou avec PSO(3)? ")
         jeu1 = input()
-        if jeu1 == '1' or jeu1 == '2' : 
+        if jeu1 == '1' or jeu1 == '2' or jeu1 == '3' : 
            good = True
         else : 
             print("mauvaise entrée ! ")
+    if jeu1  == '3' :
+        PSO = UsePSO.UsePSO(Couleur, positions)
+        while BP != positions :
+            print ("Proposition n° : "+ str(len(PSO.propositions)) + " -> " + str(PSO.actual_prop))
+            BP,MP = compare(PSO.actual_prop, code)
+            PSO.reponse(MP,BP)
+            i += 1
     if jeu1  == '1' :
         GA = UseGA.UseGA(Couleur, positions)
         while BP != positions :

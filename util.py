@@ -1,3 +1,5 @@
+import random
+
 def fusion(L1,L2):
     n1 = len(L1)
     n2 = len(L2)
@@ -54,3 +56,9 @@ def compare(essai,code) :
 
     #print(str(BP) + " bien placé\n" + str(MP) + " mal placé\n")
     return BP,MP
+
+def gen(positions, Couleur) :
+    code =[]
+    for i in range(positions) : 
+        code.append(random.choice(Couleur))
+    return code
