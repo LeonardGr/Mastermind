@@ -131,13 +131,13 @@ class Genetic :
                     break
             
             if random.random() > .5 :
-                children = self.onePointcrossover(parent1,parent2)
+                children = self.SwitchOnePoint(parent1,parent2)
                 if (self.TestCodeExist(NextGeneration, children)) :
                     self.addRandomCode(i, NextGeneration)
                 else :
                     NextGeneration[i] = children
             else :
-                children = self.twoPointCrossover(parent1,parent2)
+                children = self.SwitchTwoPoint(parent1,parent2)
                 if (self.TestCodeExist(NextGeneration, children)) :
                     self.addRandomCode(i, NextGeneration)
                 else :
@@ -152,7 +152,7 @@ class Genetic :
         self.inversion()
 
     # fonction pour faire un enfant moitié père moité mère
-    def onePointcrossover(self, parent1, parent2) :
+    def SwitchOnePoint(self, parent1, parent2) :
         point =random.randint(0, (self.positions-1))
         couleur = []
         for i in range(self.positions) : couleur.append(0)
@@ -165,7 +165,7 @@ class Genetic :
         return child
 
     # fonction pour faire 2 points de rotation père/mère
-    def twoPointCrossover(self, parent1,parent2) :
+    def SwitchTwoPoint(self, parent1,parent2) :
         index1 = random.randint(0, (self.positions-1))
         index2 = random.randint(0, (self.positions-1))
         while index2 == index1 :
@@ -188,11 +188,11 @@ class Genetic :
         child = couleur
         return child
 
-    # Mutation propable à 3%, on change une couleur à un emplacement aléatoire d'un code
+    # Mutation propable à 2%, on change une couleur à un emplacement aléatoire d'un code
     def mutation(self) :
         for i in range(Genetic.TaillePopu) :
             proba = random.randint(0,100)
-            if proba <= 3 :
+            if proba <= 2 :
                 index = random.randint(0, (self.positions-1))
                 couleur = secrets.choice(self.CouleurPossible)
                 nouveau =self.popu[i]
@@ -225,11 +225,11 @@ class Genetic :
                     self.addRandomCode(i, self.popu)
                 else : 
                     self.popu[i] = new
-    # mutation probable à 3%, on inverse deux couleurs d'un code
+    # mutation probable à 2%, on inverse deux couleurs d'un code
     def permutation(self) :
         for i in range(Genetic.TaillePopu) :
             proba = random.randint(0,100)
-            if proba <= 3 :
+            if proba <= 2 :
                 index1 = random.randint(0, (self.positions-1))
                 index2 = random.randint(0, (self.positions-1))
                 while index2 == index1 :

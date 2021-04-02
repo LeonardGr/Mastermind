@@ -1,5 +1,5 @@
 import random
-import CodeBreaker
+import UseGA
 import Lourd
 Couleur =  (('J','B','R','V','L','N'))
 juste = False
@@ -67,7 +67,7 @@ while 1==1 :
         else : 
             print("mauvaise entrée ! ")
     if jeu1  == '1' :
-        GA = CodeBreaker.UseGA(Couleur, positions)
+        GA = UseGA.UseGA(Couleur, positions)
         while BP != positions :
             print ("Proposition n° : "+ str(len(GA.propositions)) + " -> " + str(GA.actual_prop))
             BP,MP = jeu(GA.actual_prop, code)

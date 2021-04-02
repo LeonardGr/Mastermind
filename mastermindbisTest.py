@@ -1,5 +1,5 @@
 import random
-import CodeBreaker
+import UseGA
 import Lourd
 import time
 import sys
@@ -61,11 +61,11 @@ BP = 0
 MP = 0
 i = 1
 if sys.argv[1]  == 'GA' :
-    gameBreaker = CodeBreaker.MMCodebreaker(Couleur, positions)
+    GA = UseGA.UseGA(Couleur, positions)
     while BP != positions :
-        #print ("Proposition n° : "+ str(gameBreaker.compte) + " -> " + str(gameBreaker.nextMove()))
-        BP,MP = jeu(gameBreaker.nextMove(), code)
-        gameBreaker.reponse(MP,BP)
+        #print ("Proposition n° : "+ str(GA.compte) + " -> " + str(GA.nextMove()))
+        BP,MP = jeu(GA.nextMove(), code)
+        GA.reponse(MP,BP)
         i += 1
 if sys.argv[1] == 'Linear' :
     possibilites = Lourd.genPoss(Couleur, positions) 
