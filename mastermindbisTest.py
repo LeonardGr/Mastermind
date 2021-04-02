@@ -64,7 +64,7 @@ if sys.argv[1]  == 'GA' :
     GA = UseGA.UseGA(Couleur, positions)
     while BP != positions :
         #print ("Proposition n° : "+ str(GA.compte) + " -> " + str(GA.nextMove()))
-        BP,MP = jeu(GA.nextMove(), code)
+        BP,MP = jeu(GA.actual_prop, code)
         GA.reponse(MP,BP)
         i += 1
 if sys.argv[1] == 'Linear' :
