@@ -18,12 +18,12 @@ class Genetic :
         self.TryNumber = 0
         self.positions = NbrePosition
         self.CreateGenetic(self.CouleurPossible)
-
+    
     #Verification qu'un code exist dans un ensemble
     def TestCodeExist(self, ensemble, test) :
         if len(ensemble) != 0 :
             if test in ensemble :
-                return True
+                return True 
             else :
                 return False
     # crée un code aléatoire et l'insere dans l'ensemble à l'indice donnée
@@ -255,14 +255,29 @@ class Genetic :
                 self.popu[index2] = t
             except :
                 print(str(index1) + " exchange with " + str(index2) + "gone wrong")
+
+    def evaluation(self, test, i ) :
+        BP,MP = self.jeu(test, self.PrecedentTry[i])
+        e = abs(self.score(self.reponse[i][0],self.reponse[i][1]) - self.score(BP,MP)) + Genetic.B * i
+        return e
+
+    def score(self,BP,MP) :
+        e = 2*BP + MP
+        return e
+
     # Calcul du fitness, taux de probabilité d'être le code, donc en fonction de BP et MP commun avec ceux testés, que l'on pondère par le nombre de test
     def fitness(self, test) :
         fitness = 0
         for i in range(self.TryNumber) :
-            BP,MP = self.jeu(test, self.PrecedentTry[i])
-            fitness += Genetic.A * abs(BP - self.reponse[i][0]) + abs(MP - self.reponse[i][1])
-        fitness += Genetic.B * self.positions * (self.TryNumber)
+            fitness += self.evaluation(test, i)
+            #BP,MP = self.jeu(test, self.PrecedentTry[i])
+            #fitness += Genetic.A * abs(BP - self.reponse[i][0]) + abs(MP - self.reponse[i][1])
+        #fitness += Genetic.B * self.positions * (self.TryNumber)
         return fitness
+
+    
+
+
     #Fonction permettant de calculer les MP/BP
     def jeu(self, essai, code) :
         #code = self.PrecedentTry(Nmbtest-1)

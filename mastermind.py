@@ -26,6 +26,7 @@ def test(essai) :
             return False
     return True
 
+
 def jeu(essai, code) :
     Vessai = essai.copy()
     Vcode = code.copy()
