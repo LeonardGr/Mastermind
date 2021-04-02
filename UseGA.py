@@ -8,6 +8,7 @@ class UseGA :
         self.couleurs = colors
         self.Nombrepositions = positions
         self.propositions = []
+        #self.propositions.append(self.PremiereProposition())
         self.propositions.append(self.PremiereProposition())
         self.actual_prop = self.propositions[-1]
         self.testGenetic = Genetic.Genetic(self.couleurs, self.Nombrepositions)
@@ -23,3 +24,13 @@ class UseGA :
         for i in range (self.Nombrepositions) :
             code.append(random.choice(self.couleurs))
         return code
+
+    def PremierePropositionTest (self) :
+        code =[] 
+        for i in range (self.Nombrepositions) :
+            if i <(self.Nombrepositions/2) :
+                code.append(self.couleurs[0])
+            else : 
+                code.append(self.couleurs[1])
+        return code
+

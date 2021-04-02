@@ -26,6 +26,27 @@ def test(essai) :
             return False
     return True
 
+"""
+TODO :
+Comparer pour chaque element du code secret si celui d'en face est le bon ->+1BP
+Sinon regarder si un autre existe -> +1MP
+"""
+def compare(essai,code) :
+    Vessai = essai.copy()
+    BP = 0
+    MP = 0
+    for index, couleur in enumerate(code) :
+        if couleur == Vessai[index] :
+            BP +=1
+            Vessai[index] = '0'
+        elif couleur in Vessai:
+            if Vessai[Vessai.index(couleur)] != code[Vessai.index(couleur)] :
+                MP +=1
+                Vessai[Vessai.index(couleur)] = '0'
+    print(str(BP) + " bien placé\n" + str(MP) + " mal placé\n")
+    return BP, MP
+
+
 
 def jeu(essai, code) :
     Vessai = essai.copy()
@@ -55,6 +76,7 @@ def jeu(essai, code) :
 #Un code est généré, et l'on utilise après le GA ou le linéaire MM ou EN
 while 1==1 :
     code = gen()
+    #code = gen()
     print ("\nCode à trouver : " + str(code) + "\n")
     BP = 0
     MP = 0
@@ -71,7 +93,7 @@ while 1==1 :
         GA = UseGA.UseGA(Couleur, positions)
         while BP != positions :
             print ("Proposition n° : "+ str(len(GA.propositions)) + " -> " + str(GA.actual_prop))
-            BP,MP = jeu(GA.actual_prop, code)
+            BP,MP = compare(GA.actual_prop, code)
             GA.reponse(MP,BP)
             i += 1
     if jeu1 == '2' :
@@ -90,7 +112,7 @@ while 1==1 :
         while BP != positions : 
             print( " Il reste " + str(len(possibilites)) + " possibilités")
             print("propositions n°" + str(i) + " : " + str(proposition))
-            BP,MP = jeu(proposition, code)
+            BP,MP = compare(proposition, code)
             possibilites = Lourd.reduce(proposition,possibilites,BP,MP)
             if jeu2 == '1' :
                 proposition = Lourd.MaxMin(possibilites)

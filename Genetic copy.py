@@ -52,32 +52,55 @@ class Genetic :
         self.reponse = response
         self.TryNumber = Count 
         self.PrecedentTry = PrecedentTry
+
         h = 1
         eligible = []
+        A = 1
+        B = 2
         #On fait se développer la population tant que l'on a pas assez d'evenement éligible
-        while (len(eligible) == 0) :
-            while(h <= Genetic.MaxGen and len(eligible)<=Genetic.MaxSize) :
-                self.DevGenetic()
-                for i in range(Genetic.TaillePopu) :
-                    difBP = 0
-                    difMP = 0
-                    #dif = self.fitness(self.popu[i])
-                    for j in range(len(self.PrecedentTry)) : 
-                        BP,MP = util.compare(self.PrecedentTry[j], self.popu[i])
-                        difBP += Genetic.A * abs(BP - self.reponse[j][0])
-                        difMP += abs(MP - self.reponse[j][1])
-                    if difBP == 0 and difMP == 0 :
-                        if self.popu[i] not in eligible : 
-                            eligible.append(self.popu[i])
-                h +=1
+        while(h <= Genetic.MaxGen and len(eligible)<=Genetic.MaxSize) :
+            self.DevGenetic()
+            for i in range(Genetic.TaillePopu) :
+                difBP = 0
+                difMP = 0
+                dif = self.fitness(self.popu[i])
+
+                """ for j in range(len(self.PrecedentTry)) : 
+                    BP,MP = util.compare(self.PrecedentTry[j], self.popu[i])
+                    difBP += Genetic.A * abs(BP - self.reponse[j][0])
+                    difMP += abs(MP - self.reponse[j][1])
                 
+                if difBP == 0 and difMP == 0 : """
+                if dif == 0 :
+                    if self.TestCodeExist(eligible, self.popu[i]) == False : 
+
+                        """ exists = False
+                        for elements in eligible : 
+                            if elements == self.popu[i] : 
+                                exists = True   
+                        if exists == False : """
+
+                        eligible.append(self.popu[i])
+            h +=1
 
         for i in range(len(eligible)) :
             if self.TestCodeExist(self.popu, eligible[i]) == False : 
-                index = random.randint(0,(len(self.popu)-1))
+                index = random.randint(0,len(self.popu))
                 self.popu[index] = eligible[i]
 
-        bestguess = random.choice(eligible)
+
+        bestguess = eligible[0]
+        mostSimilarity = 0
+        similarity = 0
+        # On choisit celui le plus semblable au code de base
+        for elements in eligible :
+            for elements2 in eligible :
+                if (elements != elements2) :
+                    BP,MP = util.compare(elements2, elements)
+                    similarity += BP + MP
+                    if (similarity >= mostSimilarity) :
+                        mostSimilarity = similarity
+                        bestguess = elements
         return bestguess
 
 
@@ -107,20 +130,16 @@ class Genetic :
         fitnessarray[Genetic.TaillePopu -1 ] = 1
 
         for i in range(Genetic.TaillePopu) :
-            parent1 = 0
-            parent2 = 0
-            while parent1 == 0 :
-                randomNum = random.gauss(0,1)
-                for j in range(Genetic.TaillePopu) :
-                    if fitnessarray[j] >= randomNum :
-                        parent1 = self.popu[j]
-                        break
-            while parent2 == 0 :
-                randomNum = random.gauss(0,1)
-                for j in range(Genetic.TaillePopu) :
-                    if fitnessarray[j] >= randomNum :
-                        parent2 = self.popu[j]
-                        break
+            randomNum = random.random()
+            for j in range(Genetic.TaillePopu) :
+                if fitnessarray[j] >= randomNum :
+                    parent1 = self.popu[j]
+                    break
+            randomNum = random.random()
+            for j in range(Genetic.TaillePopu) :
+                if fitnessarray[j] >= randomNum :
+                    parent2 = self.popu[j]
+                    break
             
             if random.random() > .5 :
                 children = self.SwitchOnePoint(parent1,parent2)
@@ -235,6 +254,20 @@ class Genetic :
                     self.addRandomCode(i, self.popu)
                 else :
                     self.popu[i] = new
+
+    """     #On mélange la population
+    def Mix(self) :
+        for i in range(500) :
+            index1 = random.randint(0,(len(self.popu) - 1)) 
+            index2 = random.randint(0,(len(self.popu) - 1)) 
+            while index2 == index1 :
+                index2 = random.randint(0,(len(self.popu) - 1)) 
+            try :
+                t = self.popu[index1]
+                self.popu[index1] = self.popu[index2]
+                self.popu[index2] = t
+            except :
+                print(str(index1) + " exchange with " + str(index2) + "gone wrong") """
 
     def evaluation(self, test, i ) :
         BP,MP = util.compare(test, self.PrecedentTry[i])

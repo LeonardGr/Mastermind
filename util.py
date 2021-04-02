@@ -38,3 +38,19 @@ def tri_fusion(L):
     M = list(L)
     tri_fusion_recursif(M)
     return M
+
+def compare(essai,code) :
+    Vessai = essai.copy()
+    BP = 0
+    MP = 0
+    for index, couleur in enumerate(code) :
+        if couleur == Vessai[index] :
+            BP +=1
+            Vessai[index] = '0'
+        elif couleur in Vessai:
+            if Vessai[Vessai.index(couleur)] != code[Vessai.index(couleur)] :
+                MP +=1
+                Vessai[Vessai.index(couleur)] = '0'
+
+    #print(str(BP) + " bien placé\n" + str(MP) + " mal placé\n")
+    return BP,MP
