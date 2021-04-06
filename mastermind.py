@@ -2,7 +2,8 @@ import random
 import UsePSO
 import UseGA
 import Lourd
-Couleur =  (('J','B','R','V','L','N'))
+import sys
+Couleur =  (('J','B','R','V','L','N','A','C'))
 juste = False
 positions = 4
 i = 1
@@ -75,6 +76,12 @@ def jeu(essai, code) :
     return(BP,MP)
 
 #Un code est généré, et l'on utilise après le GA ou le linéaire MM ou EN
+
+NombreCouleur = int(sys.argv[2])
+positions = int(sys.argv[1])
+Couleur = Couleur[:NombreCouleur]
+print(Couleur)
+
 while 1==1 :
     code = gen()
     #code = gen()
@@ -91,14 +98,15 @@ while 1==1 :
         else : 
             print("mauvaise entrée ! ")
     if jeu1  == '3' :
-        PSO = UsePSO.UsePSO(Couleur, positions)
+        PSO = UsePSO.UsePSO(Couleur, positions, 10,5,2,4,3,10)
         while BP != positions :
             print ("Proposition n° : "+ str(len(PSO.propositions)) + " -> " + str(PSO.actual_prop))
             BP,MP = compare(PSO.actual_prop, code)
-            PSO.reponse(MP,BP)
+            if BP != positions : 
+                PSO.reponse(MP,BP)
             i += 1
     if jeu1  == '1' :
-        GA = UseGA.UseGA(Couleur, positions)
+        GA = UseGA.UseGA(Couleur, positions,2, 0, 2, 60, 150, 200)
         while BP != positions :
             print ("Proposition n° : "+ str(len(GA.propositions)) + " -> " + str(GA.actual_prop))
             BP,MP = compare(GA.actual_prop, code)

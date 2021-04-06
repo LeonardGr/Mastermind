@@ -3,18 +3,19 @@ import PSO
 
 #Classe pour deviner un code en utilisant un algorithme génétique
 class UsePSO :
-    def __init__ (self,colors, positions) :
+    def __init__ (self,colors, positions, NbreCluster, NbreAgent, Distmin, distmax, distpull,MaxGen ) :
         self.responseList = []
         self.couleurs = colors
         self.Nombrepositions = positions
         self.propositions = []
         self.propositions.append(self.PremiereProposition())
         self.actual_prop = self.propositions[-1]
-        self.testPSO = PSO.PSO(self.couleurs, self.Nombrepositions)
+        self.testPSO = PSO.PSO(self.couleurs, self.Nombrepositions, NbreCluster, NbreAgent, Distmin, distmax, distpull,MaxGen)
 
     #En fonction des BP, MP qu'on vient d'obtenir, on les ajoute à notre liste de réponse et on utilise le GA pour avoir la meilleure réponse possible  
     def reponse(self, MP,BP) : 
         self.responseList.append((BP,MP))
+        self.testPSO.updatevalid(self.propositions[-1], BP, MP)
         self.propositions.append(self.testPSO.bestcode(len(self.propositions), self.responseList, self.propositions))
         self.actual_prop = self.propositions[-1]
 

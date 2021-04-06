@@ -46,14 +46,19 @@ def compare(essai,code) :
     BP = 0
     MP = 0
     for index, couleur in enumerate(code) :
-        if couleur == Vessai[index] :
-            BP +=1
-            Vessai[index] = '0'
-        elif couleur in Vessai:
-            if Vessai[Vessai.index(couleur)] != code[Vessai.index(couleur)] :
-                MP +=1
-                Vessai[Vessai.index(couleur)] = '0'
-
+        try :
+            if couleur == Vessai[index] :
+                BP +=1
+                Vessai[index] = '0'
+            elif couleur in Vessai:
+                if Vessai[Vessai.index(couleur)] != code[Vessai.index(couleur)] :
+                    MP +=1
+                    Vessai[Vessai.index(couleur)] = '0'
+        except :
+            print(couleur)
+            print(code)
+            print(Vessai)
+            exit()
     #print(str(BP) + " bien placé\n" + str(MP) + " mal placé\n")
     return BP,MP
 
@@ -62,3 +67,4 @@ def gen(positions, Couleur) :
     for i in range(positions) : 
         code.append(random.choice(Couleur))
     return code
+
