@@ -1,5 +1,5 @@
 import random
-import GeneticTrue
+import Genetic
 
 #Classe pour deviner un code en utilisant un algorithme génétique
 class UseGA :
@@ -13,7 +13,7 @@ class UseGA :
         else :
             self.propositions.append(self.PremierePropositionTest())
         self.actual_prop = self.propositions[-1]
-        self.testGenetic = GeneticTrue.Genetic(self.couleurs, self.Nombrepositions, ponderation, pourcentage, TailleEligible, TaillePopu, NombreGen)
+        self.testGenetic = Genetic.Genetic(self.couleurs, self.Nombrepositions, ponderation, pourcentage, TailleEligible, TaillePopu, NombreGen)
     #En fonction des BP, MP qu'on vient d'obtenir, on les ajoute à notre liste de réponse et on utilise le GA pour avoir la meilleure réponse possible  
     def reponse(self, MP,BP) : 
         self.responseList.append((BP,MP))

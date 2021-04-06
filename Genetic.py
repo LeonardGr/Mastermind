@@ -4,13 +4,18 @@ import util
 
 class Genetic :
     # paramètres globaux
-    TaillePopu = 150 
+    """ TaillePopu = 150 
     MaxGen = 100
     MaxSize = 60
     A = 1 # poids des MP
-    B = 2 #poids des BP
+    B = 2 #poids des BP """
 
-    def __init__(self, couleurs, NbrePosition ) :
+    def __init__(self, couleurs, NbrePosition, ponderation, pourcentage, TailleEligible, TaillePopu, NombreGen ) :
+        self.B = ponderation
+        self.pourcentage = pourcentage
+        self.MaxSize = TailleEligible
+        self.TaillePopu = TaillePopu
+        self.MaxGen = NombreGen        
         self.CouleurPossible = couleurs
         self.popu = []
         self.reponse = []
@@ -32,7 +37,7 @@ class Genetic :
         Exist = True
         while (Exist == True):
             mot = []
-            for i in range(4) : 
+            for i in range(self.positions) : 
                 mot.append(random.choice(self.CouleurPossible))
             Exist = self.TestCodeExist(ensemble, mot)
         try : 
@@ -43,7 +48,7 @@ class Genetic :
     def CreateGenetic(self, couleurs) :
         self.CouleurPossible = couleurs
         self.popu = []
-        for i in range(Genetic.TaillePopu) :
+        for i in range(self.TaillePopu) :
             self.addRandomCode(i, self.popu)
         
     #Choisi le meilleur code dans la population
@@ -52,76 +57,92 @@ class Genetic :
         self.reponse = response
         self.TryNumber = Count 
         self.PrecedentTry = PrecedentTry
+
         h = 1
         eligible = []
+        A = 1
+        B = 2
         #On fait se développer la population tant que l'on a pas assez d'evenement éligible
-        while (len(eligible) == 0) :
-            while(h <= Genetic.MaxGen and len(eligible)<=Genetic.MaxSize) :
-                self.DevGenetic()
-                for i in range(Genetic.TaillePopu) :
-                    difBP = 0
-                    difMP = 0
-                    #dif = self.fitness(self.popu[i])
-                    for j in range(len(self.PrecedentTry)) : 
-                        BP,MP = util.compare(self.PrecedentTry[j], self.popu[i])
-                        difBP += Genetic.A * abs(BP - self.reponse[j][0])
-                        difMP += abs(MP - self.reponse[j][1])
-                    if difBP == 0 and difMP == 0 :
-                        if self.popu[i] not in eligible : 
-                            eligible.append(self.popu[i])
-                h +=1
+        while(h <= self.MaxGen and len(eligible)<=self.MaxSize) :
+            self.DevGenetic()
+            for i in range(self.TaillePopu) :
+                difBP = 0
+                difMP = 0
+                for j in range(len(self.PrecedentTry)) : 
+                    BP,MP = util.compare(self.PrecedentTry[j], self.popu[i])
+                    difBP += self.B * abs(BP - self.reponse[j][0])
+                    difMP += abs(MP - self.reponse[j][1])
                 
+                if difBP == 0 and difMP == 0 :
+                    exists = False
+                    for elements in eligible : 
+                        if elements == self.popu[i] : 
+                            exists = True   
+                    if exists == False :
+                        eligible.append(self.popu[i])
+            h +=1
+        if len(eligible) == 0 :
+            bestfit = 10000
+            bestcode = util.gen(self.positions, self.CouleurPossible)
+            for i in range(self.TaillePopu) :
+                    if self.fitness(self.popu[i]) > bestfit :
+                        bestfit =self.fitness(self.popu[i])
+                        bestcode = self.popu[i]
+            return bestcode
 
-        for i in range(len(eligible)) :
-            if self.TestCodeExist(self.popu, eligible[i]) == False : 
-                index = random.randint(0,(len(self.popu)-1))
-                self.popu[index] = eligible[i]
-
-        bestguess = random.choice(eligible)
+        bestguess = eligible[0]
+        mostSimilarity = 0
+        similarity = 0
+        # On choisit celui le plus semblable au code de base
+        for elements in eligible :
+            for elements2 in eligible :
+                if (elements != elements2) :
+                    BP,MP = util.compare(elements2, elements)
+                    similarity += BP + MP
+                    if (similarity >= mostSimilarity) :
+                        mostSimilarity = similarity
+                        bestguess = elements
         return bestguess
-
-
     # developpement de la population, on classe les membres selon leur fitness(probabilité d'être le code), on en choisit 2, on en tire un enfant
     # l'enfant est soi moitié père moitié mère soit il y a 2 points de rotation
     def DevGenetic(self) :
         NextGeneration = []
         fitnessarray =[]
-        for i in range(Genetic.TaillePopu) :
+        for i in range(self.TaillePopu) :
             NextGeneration.append((''))
             fitnessarray.append(0)
         
         totalFitness = 0
-        for i in range(Genetic.TaillePopu) :
+        for i in range(self.TaillePopu) :
                 fitnessarray[i] = self.fitness(self.popu[i])
                 totalFitness += fitnessarray[i]
-        for i in range(Genetic.TaillePopu) :
-            fitnessarray[i] = fitnessarray[i]/totalFitness
-        
-        fitnessarray = util.tri_fusion(fitnessarray)
+        maximum = max(fitnessarray)
+        for i in range(self.TaillePopu) :
+            fitnessarray[i] = (maximum - fitnessarray[i] )/totalFitness
+        maximum = max(fitnessarray)
+        """ fitnessarray = util.tri_fusion(fitnessarray)
 
         totalFitness = 0
-        for i in range(Genetic.TaillePopu) :
+        for i in range(self.TaillePopu) :
             totalFitness += fitnessarray[i]
             fitnessarray[i] = totalFitness
 
-        fitnessarray[Genetic.TaillePopu -1 ] = 1
+        fitnessarray[self.TaillePopu -1 ] = 1 """
 
-        for i in range(Genetic.TaillePopu) :
+
+        for i in range(self.TaillePopu) :
             parent1 = 0
             parent2 = 0
-            while parent1 == 0 :
-                randomNum = random.gauss(0,1)
-                for j in range(Genetic.TaillePopu) :
-                    if fitnessarray[j] >= randomNum :
-                        parent1 = self.popu[j]
-                        break
-            while parent2 == 0 :
-                randomNum = random.gauss(0,1)
-                for j in range(Genetic.TaillePopu) :
-                    if fitnessarray[j] >= randomNum :
-                        parent2 = self.popu[j]
-                        break
-            
+            randomNum = random.uniform(0,maximum)
+            for j in range(self.TaillePopu) :
+                if fitnessarray[j] >= randomNum :
+                    parent1 = self.popu[j]
+                    break
+            randomNum = random.uniform(0,maximum)
+            for j in range(self.TaillePopu) :
+                if fitnessarray[j] >= randomNum :
+                    parent2 = self.popu[j]
+                    break
             if random.random() > .5 :
                 children = self.SwitchOnePoint(parent1,parent2)
                 if (self.TestCodeExist(NextGeneration, children)) :
@@ -137,8 +158,8 @@ class Genetic :
 
         self.popu = NextGeneration
 
-        # On finit par mélanger notre population puis on effectue diverses mutations
-        #self.Mix()
+        # On finit par mélanger notre population puis on effectue diverses mutation
+        self.Mix()
         self.mutation()
         self.permutation()
         self.inversion()
@@ -182,9 +203,9 @@ class Genetic :
 
     # Mutation propable à 2%, on change une couleur à un emplacement aléatoire d'un code
     def mutation(self) :
-        for i in range(Genetic.TaillePopu) :
+        for i in range(self.TaillePopu) :
             proba = random.randint(0,100)
-            if proba <= 2 :
+            if proba <= self.pourcentage :
                 index = random.randint(0, (self.positions-1))
                 couleur = secrets.choice(self.CouleurPossible)
                 nouveau =self.popu[i]
@@ -193,12 +214,11 @@ class Genetic :
                     self.addRandomCode(i, self.popu)
                 else :
                     self.popu[i][index] =  couleur
-
     # Mutation probable à 2%, on inverse de place le sens d'un code à partir d'un index
     def inversion(self) : 
-        for i in range(Genetic.TaillePopu) :
+        for i in range(self.TaillePopu) :
             proba = random.randint(0,100)
-            if proba <= 2 :
+            if proba <= self.pourcentage :
                 new = self.popu[i]
                 index1 = random.randint(0, (self.positions-1))
                 index2 = random.randint(0, (self.positions-1))
@@ -220,9 +240,9 @@ class Genetic :
                     self.popu[i] = new
     # mutation probable à 2%, on inverse deux couleurs d'un code
     def permutation(self) :
-        for i in range(Genetic.TaillePopu) :
+        for i in range(self.TaillePopu) :
             proba = random.randint(0,100)
-            if proba <= 2 :
+            if proba <= self.pourcentage :
                 index1 = random.randint(0, (self.positions-1))
                 index2 = random.randint(0, (self.positions-1))
                 while index2 == index1 :
@@ -235,15 +255,27 @@ class Genetic :
                     self.addRandomCode(i, self.popu)
                 else :
                     self.popu[i] = new
+    #On mélange la population
+    def Mix(self) :
+        for i in range(500) :
+            index1 = random.randint(0,(len(self.popu) - 1)) 
+            index2 = random.randint(0,(len(self.popu) - 1)) 
+            while index2 == index1 :
+                index2 = random.randint(0,(len(self.popu) - 1)) 
+            try :
+                t = self.popu[index1]
+                self.popu[index1] = self.popu[index2]
+                self.popu[index2] = t
+            except :
+                print(str(index1) + " exchange with " + str(index2) + "gone wrong")
 
     def evaluation(self, test, i ) :
         BP,MP = util.compare(test, self.PrecedentTry[i])
-        #e = abs(self.score(self.reponse[i][0],self.reponse[i][1]) - self.score(BP,MP)) + Genetic.B * i
-        e = abs(self.score(self.reponse[i][0],self.reponse[i][1]) - self.score(BP,MP)) 
+        e = abs(self.score(self.reponse[i][0],self.reponse[i][1]) - self.score(BP,MP))
         return e
 
     def score(self,BP,MP) :
-        e = 2*BP + MP
+        e = self.B*BP + MP
         return e
 
     # Calcul du fitness, taux de probabilité d'être le code, donc en fonction de BP et MP commun avec ceux testés, que l'on pondère par le nombre de test
@@ -255,6 +287,9 @@ class Genetic :
             #fitness += Genetic.A * abs(BP - self.reponse[i][0]) + abs(MP - self.reponse[i][1])
         #fitness += Genetic.B * self.positions * (self.TryNumber)
         return fitness
+
+    
+
 
     #Fonction permettant de calculer les MP/BP
     """ def jeu(self, essai, code) :
