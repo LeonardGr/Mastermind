@@ -60,8 +60,6 @@ class Genetic :
 
         h = 1
         eligible = []
-        A = 1
-        B = 2
         #On fait se développer la population tant que l'on a pas assez d'evenement éligible
         while(h <= self.MaxGen and len(eligible)<=self.MaxSize) :
             self.DevGenetic()
@@ -120,15 +118,6 @@ class Genetic :
         for i in range(self.TaillePopu) :
             fitnessarray[i] = (maximum - fitnessarray[i] )/totalFitness
         maximum = max(fitnessarray)
-        """ fitnessarray = util.tri_fusion(fitnessarray)
-
-        totalFitness = 0
-        for i in range(self.TaillePopu) :
-            totalFitness += fitnessarray[i]
-            fitnessarray[i] = totalFitness
-
-        fitnessarray[self.TaillePopu -1 ] = 1 """
-
 
         for i in range(self.TaillePopu) :
             parent1 = 0

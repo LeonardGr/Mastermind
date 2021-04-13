@@ -1,7 +1,7 @@
 import random
 import PSO
 
-#Classe pour deviner un code en utilisant un algorithme génétique
+#Classe pour deviner un code en utilisant un algorithme swarm algorithm
 class UsePSO :
     def __init__ (self,colors, positions, NbreCluster, NbreAgent, Distmin, distmax, distpull,MaxGen ) :
         self.responseList = []
